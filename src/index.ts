@@ -1,10 +1,11 @@
-require('dotenv').config()
-const {createServer} = require("http")
-const { Server } = require("socket.io")
+import handleCommands from "./commands"
+
+import 'dotenv/config'
+import {createServer} from "http"
+import { Server } from "socket.io"
 const httpServer = createServer()
-// console.log("hello world4", process.env.TWITCH_OAUTH_TOKEN)
 console.log("Starting witchBot")
-const tmi = require('tmi.js');
+import tmi from 'tmi.js';
 const client = new tmi.Client({
     options: { debug: true },
     connection: {
@@ -28,7 +29,7 @@ console.log("Websocket server ready on port", process.env.WEBSOCKET_PORT)
 io.on("connection", (socket) => {
     console.log("a client connected")
 })
-io.listen(process.env.WEBSOCKET_PORT);
+io.listen(parseInt(process.env.WEBSOCKET_PORT));
 
 
 
@@ -53,9 +54,8 @@ client.on('message', (channel, tags, message, self) => {
         return
     }
 
-    if(/!hello/.test(lowercaseMessage)) {
-        client.say(channel, `@${tags.username}, Yo what's up`);
-    }
+    handleCommands({client, channel, tags, lowercaseMessage})
+
 });
 
 const sendEvent = (event, params) => {
