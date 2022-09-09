@@ -13,15 +13,15 @@ const client = new tmi.Client({
         reconnect: true
     },
     identity: {
-        username: 'janlunge',
+        username: process.env.TWITCH_USERNAME,
         password: process.env.TWITCH_OAUTH_TOKEN
     },
-    channels: ['janlunge']
+    channels: [process.env.TWITCH_USERNAME]
 });
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: true
     }
 
 })
