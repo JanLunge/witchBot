@@ -1,5 +1,5 @@
 import handleCommands from "./commands"
-
+import {updateSourcePosition} from "./mouse_watcher"
 import 'dotenv/config'
 import {createServer} from "http"
 import { Server } from "socket.io"
@@ -114,3 +114,7 @@ client.on("subscription", (channel, username, method, message, userstate) => {
 client.on("timeout", (channel, username, reason, duration, userstate) => {
     sendEvent("timeout", {})
 });
+
+if(process.env.TRACK_MOUSE === "true"){
+    updateSourcePosition().catch(console.error);
+}
